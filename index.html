@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dish Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            background-image: url('https://www.example.com/food-background.jpg'); /* Replace with your own image URL */
+            background-size: cover;
+            background-position: center;
+        }
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 17px;
+            transition: background-color 0.3s;
+        }
+        .navbar a:hover {
+            background-color: #575757;
+        }
+        .navbar a.active {
+            background-color: rgba(0, 255, 47, 0.625);
+            width: 1000px;
+        }
+        .navbar .icon {
+            display: none;
+        }
+
+        .menu-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+        }
+
+        .menu-list li {
+            display: inline-block;
+            margin: 10px 20px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, background-color 0.3s;
+            width: 300px;
+            text-align: left;
+        }
+
+        .menu-list li:hover {
+            transform: scale(1.05);
+            background-color: rgba(240, 240, 240, 0.8);
+        }
+
+        .menu-list li .dish-name {
+            float: left;
+            font-weight: bold;
+        }
+
+        .menu-list li .price {
+            float: right;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-top: 30px;
+            position: relative; /* For positioning mic inside the search bar */
+        }
+
+        .search-container input {
+            padding: 10px;
+            width: 280px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding-right: 40px; /* To make space for mic icon */
+        }
+
+        .search-container button {
+            padding: 10px 15px;
+            margin-left: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-container button:hover {
+            background-color: #45a049;
+        }
+
+        .mic-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 22px; /* Bigger size for better visibility */
+        }
+
+        .category-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .category-container button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .category-container button:hover {
+            background-color: #45a049;
+        }
+
+        .rating-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .rating-container label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .rating-container input {
+            margin-right: 5px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .navbar a {float: none; display: block; text-align: left;}
+            .navbar a.icon {
+                float: right;
+                display: block;
+            }
+            .menu-list li {
+                display: block;
+                margin: 10px auto;
+            }
+        }
+        body{
+            background-color: brown;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="#home" class="active"><center>Home</center></a>
+       
+        <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
+            &#9776;
+        </a>
+    </div>
+
+    <!-- Category Buttons -->
+    <div class="category-container">
+        <button onclick="filterCategory('all')">All</button>
+        <button onclick="filterCategory('desserts')">Desserts</button>
+        <button onclick="filterCategory('pizzas')">Pizzas</button>
+        <button onclick="filterCategory('biryani')">Biryani</button>
+        <button onclick="filterCategory('drinks')">Drinks</button>
+        <button onclick="filterCategory('paneer')">Paneer</button>
+        <button onclick="filterCategory('chicken')">Chicken</button>
+        <button onclick="filterCategory('chinese')">Chinese</button>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search for dishes..." onkeyup="filterMenu()">
+        <span class="mic-icon" onclick="startVoiceSearch()">🎤</span>
+    </div>
+
+    <div id="menu" style="padding: 30px;">
+        <h2 style="text-align: center; color: rgb(255, 255, 255);">Our Delicious Menu</h2>
+        <ul class="menu-list" id="menuList">
+            <li class="desserts"><span class="dish-name">Gulab Jamun</span><span class="price">$4.99</span></li>
+            <li class="pizzas"><span class="dish-name">Margherita Pizza</span><span class="price">$12.99</span></li>
+            <li class="biryani"><span class="dish-name">Vegetable Biryani</span><span class="price">$10.99</span></li>
+            <li class="drinks"><span class="dish-name">Coffee</span><span class="price">$3.99</span></li>
+            <li class="paneer"><span class="dish-name">Paneer Butter Masala</span><span class="price">$12.99</span></li>
+            <li class="chicken"><span class="dish-name">Butter Chicken</span><span class="price">$14.99</span></li>
+            <li class="chinese"><span class="dish-name">Chow Mein</span><span class="price">$8.99</span></li>
+        </ul>
+    </div>
+
+    <div class="rating-container">
+        <h3 style="color: white;">Restaurant Rating</h3>
+        <label for="rating">Rate our Restaurant:</label>
+        <input type="radio" name="rating" value="1" id="rating1"> 1
+        <input type="radio" name="rating" value="2" id="rating2"> 2
+        <input type="radio" name="rating" value="3" id="rating3"> 3
+        <input type="radio" name="rating" value="4" id="rating4"> 4
+        <input type="radio" name="rating" value="5" id="rating5"> 5
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var x = document.getElementsByClassName("navbar")[0];
+            if (x.className === "navbar") {
+                x.className += " responsive";
+            } else {
+                x.className = "navbar";
+            }
+        }
+
+        function filterMenu() {
+            let input = document.getElementById("searchInput").value.trim().toLowerCase(); // Trim spaces and make lowercase
+            let menuItems = document.getElementById("menuList").getElementsByTagName("li");
+
+            for (let i = 0; i < menuItems.length; i++) {
+                let item = menuItems[i].textContent.trim().toLowerCase(); // Trim spaces and make lowercase
+                if (item.indexOf(input) > -1) {
+                    menuItems[i].style.display = ""; // Show item
+                } else {
+                    menuItems[i].style.display = "none"; // Hide item
+                }
+            }
+        }
+
+        function filterCategory(category) {
+            let menuItems = document.getElementById("menuList").getElementsByTagName("li");
+
+            for (let i = 0; i < menuItems.length; i++) {
+                if (category === 'all') {
+                    menuItems[i].style.display = ""; // Show all items
+                } else if (menuItems[i].classList.contains(category)) {
+                    menuItems[i].style.display = ""; // Show category items
+                } else {
+                    menuItems[i].style.display = "none"; // Hide non-category items
+                }
+            }
+        }
+
+        // Function to start voice search
+        function startVoiceSearch() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById("searchInput").value = transcript;
+                filterMenu();  // Automatically filter the menu after voice input
+            };
+
+            recognition.onerror = function(event) {
+                alert("Error occurred in voice recognition: " + event.error);
+            };
+        }
+    </script>
+
+</body>
+</html>
+
+
+
+
+
